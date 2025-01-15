@@ -1,0 +1,22 @@
+{% extends "mainApp/wrapper.html" %}  
+
+
+{% block content  %}
+<title>{%block title%}{{ title }}{%endblock%}</title>
+    <div class="content">
+		<h1>Новости на сайте</h1>
+	{% if news %}
+		{% for el in news %}
+		<div class="alert alert-warning">
+			<h3>{{el.title}}</h3>
+			<p>{{el.anons}}</p>
+		<a href="{% url 'news_detail' el.id %}" class="btn btn-warning">Подробнее</a>
+		</div>
+		{% endfor %}
+	{% else %}
+	    <p>Новостей пока нет</p>
+	{% endif %}
+    </div>
+</body>
+
+{% endblock  %}

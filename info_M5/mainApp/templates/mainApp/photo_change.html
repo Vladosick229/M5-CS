@@ -1,0 +1,18 @@
+{% extends "mainApp/wrapper.html" %}  
+
+
+{% block content  %}
+<title>{%block title%}{{title}}{%endblock%}</title>
+    <div class="content">
+		<h1>Изменение фотографии</h1>
+	<form method="POST">
+		{% csrf_token %}
+		{{ form.url }}<br>
+		{{ form.date }}<br>
+		<span>{{ error }}</span>
+		<button class="btn btn-success" type="submit"> Добавить изменённую фотографию</button>
+	</form>
+    </div>
+</body>
+
+{% endblock  %}

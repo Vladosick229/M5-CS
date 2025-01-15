@@ -1,0 +1,14 @@
+{% extends "mainApp/wrapper.html" %}  
+
+{% block content  %}
+<title>{% block title%}{{ photo.title }}{% endblock %}</title>
+<div class="image-container">
+		<img src={{photo.url}}></img>
+	</div>
+		<br>
+		<a href="{% url 'photo_change' photo.id %}" class="btn btn-info">Редактировать</a>
+		<a href="{% url 'photo_delete' photo.id %}" class="btn btn-danger">Удалить</a>
+
+</body>
+
+{% endblock  %}
