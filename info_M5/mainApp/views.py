@@ -9,14 +9,14 @@ def home(request):
 	return render(request, 'mainApp/homePage.html',data)
 
 def about(request):
-	return render(request, 'mainApp/aboutPage.html',{'title':'About M5 CS'})
+	return render(request, 'mainApp/aboutPage.html',{'title':'Характеристики M5 CS'})
 
 def dynamic(request):
-	return render(request, 'mainApp/dynamicPage.html',{'title':'Dynamic M5 CS'})
+	return render(request, 'mainApp/dynamicPage.html',{'title':'Динамика M5 CS'})
 
 def photo(request):
 	photo = Photo.objects.order_by('-date')
-	return render(request, 'mainApp/photoPage.html',{'title':'Photo M5 CS','photo':photo})
+	return render(request, 'mainApp/photoPage.html',{'title':'Фотографии M5 CS','photo':photo})
 
 
 class PhotoDetailView(DetailView):
