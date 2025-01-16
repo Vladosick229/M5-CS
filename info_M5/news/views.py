@@ -2,6 +2,8 @@ from django.shortcuts import render,redirect
 from .models import Article
 from .forms import ArticleForm
 from django.views.generic import DetailView,UpdateView,DeleteView
+from rest_framework import generics
+from .serializers import ArticleSerializer
 
 
 def news_home(request):
@@ -23,6 +25,10 @@ class NewsDeleteView(DeleteView):
 	model= Article
 	success_url = '/news/'
 	template_name = 'news/news_delete.html'
+ 
+class NewsAPIView(generics.ListAPIView):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
 
 
 def create(request):
