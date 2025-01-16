@@ -6,5 +6,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 	path('', include('mainApp.urls')),
 	path('news/', include('news.urls')),
- 	path('api/v1/news',NewsAPIView)
+ 	
 ]
