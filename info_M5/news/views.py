@@ -6,7 +6,7 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import ArticleSerializer
-from django.forms import model_to_dict
+
 
 
 def news_home(request):
@@ -31,19 +31,32 @@ class NewsDeleteView(DeleteView):
 
 class NewsAPIView(APIView):
     def get(self, request):
-        lst = Article.objects.all().values()
-        return Response({'news': list(lst)})
+        lst = Article.objects.all()
+        return Response({'news': ArticleSerializer(lst,many=True).data})
     
     def post(self, request):
-        post_new = Article.objects.create(
-			title=request.data['title'],
-            content=request.data['content'],
-            date = request.data['date'],
-		)
-        return Response({'post': model_to_dict(post_new)})
-# class NewsAPIView(generics.ListAPIView):
-#     queryset = Article.objects.all()
-#     serializer_class = ArticleSerializer
+        serializer = ArticleSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'post': serializer.data})
+    
+    def put(self, request,*args,**kwargs):
+        pk = kwargs.get('pk',None)
+        if not pk:
+            return Response({'error': 'Article not found'})
+        
+        try:
+            instance = Article.objects.get(pk=pk)
+        except:
+            return Response({'error': 'Article not found'})
+        
+        serializer = ArticleSerializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'updated': serializer.data})
+    
+    
+    
 
 
 def create(request):
