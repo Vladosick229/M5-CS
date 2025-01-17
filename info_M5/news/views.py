@@ -3,7 +3,10 @@ from .models import Article
 from .forms import ArticleForm
 from django.views.generic import DetailView,UpdateView,DeleteView
 from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from .serializers import ArticleSerializer
+from django.forms import model_to_dict
 
 
 def news_home(request):
@@ -25,10 +28,22 @@ class NewsDeleteView(DeleteView):
 	model= Article
 	success_url = '/news/'
 	template_name = 'news/news_delete.html'
- 
-class NewsAPIView(generics.ListAPIView):
-    queryset = Article.objects.all()
-    serializer_class = ArticleSerializer
+
+class NewsAPIView(APIView):
+    def get(self, request):
+        lst = Article.objects.all().values()
+        return Response({'news': list(lst)})
+    
+    def post(self, request):
+        post_new = Article.objects.create(
+			title=request.data['title'],
+            content=request.data['content'],
+            date = request.data['date'],
+		)
+        return Response({'post': model_to_dict(post_new)})
+# class NewsAPIView(generics.ListAPIView):
+#     queryset = Article.objects.all()
+#     serializer_class = ArticleSerializer
 
 
 def create(request):
