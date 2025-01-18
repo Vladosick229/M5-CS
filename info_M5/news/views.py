@@ -29,16 +29,11 @@ class NewsDeleteView(DeleteView):
 	success_url = '/news/'
 	template_name = 'news/news_delete.html'
 
+class NewsAPIList(generics.ListCreateAPIView):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+
 class NewsAPIView(APIView):
-    def get(self, request):
-        lst = Article.objects.all()
-        return Response({'news': ArticleSerializer(lst,many=True).data})
-    
-    def post(self, request):
-        serializer = ArticleSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({'post': serializer.data})
     
     def put(self, request,*args,**kwargs):
         pk = kwargs.get('pk',None)
@@ -56,7 +51,18 @@ class NewsAPIView(APIView):
         return Response({'updated': serializer.data})
     
     
-    
+    def delete(self, request,*args,**kwargs):
+        pk = kwargs.get('pk',None)
+        if not pk:
+            return Response({'error': 'Article not found'})
+        
+        try:
+            instance = Article.objects.get(pk=pk)
+        except:
+            return Response({'error': 'Article not found'})
+        
+        instance.delete()
+        return Response({'message':'Deletion was successful'})
 
 
 def create(request):
