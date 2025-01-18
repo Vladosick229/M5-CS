@@ -38,7 +38,7 @@ class NewsAPIView(APIView):
     def put(self, request,*args,**kwargs):
         pk = kwargs.get('pk',None)
         if not pk:
-            return Response({'error': 'Article not found'})
+            return Response({'error': 'Incorrectly specified article'})
         
         try:
             instance = Article.objects.get(pk=pk)
@@ -54,7 +54,7 @@ class NewsAPIView(APIView):
     def delete(self, request,*args,**kwargs):
         pk = kwargs.get('pk',None)
         if not pk:
-            return Response({'error': 'Article not found'})
+            return Response({'error': 'Incorrectly specified article'})
         
         try:
             instance = Article.objects.get(pk=pk)
