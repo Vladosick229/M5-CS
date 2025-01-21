@@ -33,28 +33,39 @@ class NewsAPIList(generics.ListCreateAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
+
+class NewsAPIUpdate(generics.UpdateAPIView):
+	queryset = Article.objects.all()
+	serializer_class = ArticleSerializer
+	
+
+class NewsAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
+	queryset = Article.objects.all()
+	serializer_class = ArticleSerializer
+
+	
 class NewsAPIView(APIView):
     
-    def put(self, request,*args,**kwargs):
-        pk = kwargs.get('pk',None)
-        if not pk:
-            return Response({'error': 'Incorrectly specified article'})
+    # def put(self, request,*args,**kwargs):
+    #     pk = kwargs.get('pk',None)
+    #     if not pk:
+    #         return Response({'error': 'Incorrectly specified article'})
         
-        try:
-            instance = Article.objects.get(pk=pk)
-        except:
-            return Response({'error': 'Article not found'})
+    #     try:
+    #         instance = Article.objects.get(pk=pk)
+    #     except:
+    #         return Response({'error': 'Article not found'})
         
-        serializer = ArticleSerializer(instance, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({'updated': serializer.data})
+    #     serializer = ArticleSerializer(instance, data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save()
+    #     return Response({'updated': serializer.data})
     
     
     def delete(self, request,*args,**kwargs):
         pk = kwargs.get('pk',None)
         if not pk:
-            return Response({'error': 'Incorrectly specified article'})
+            return Response({'error': 'Article not found'})
         
         try:
             instance = Article.objects.get(pk=pk)
