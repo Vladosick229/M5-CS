@@ -1,13 +1,13 @@
 from django.urls import path
-from . import views 
+from views import * 
 
 urlpatterns = [
-    path('', views.home, name = ('home')),
-	path('about/', views.about, name = ('about')),
-	path('dynamic/', views.dynamic, name = ('dynamic')),
-	path('photo/', views.photo, name = ('photo')),
-	path('create_adding_photo/', views.create_adding_photo, name = ('create_adding_photo')),
-	path('<int:pk>/',views.PhotoDetailView.as_view(), name = 'photo_detail'),
-	path('<int:pk>/update/',views.PhotoUpdateView.as_view(), name = 'photo_change'),
-	path('<int:pk>/delete/',views.PhotoDeleteView.as_view(), name = 'photo_delete'),
+    path('', home, name = ('home')),
+	path('about/', about, name = ('about')),
+	path('dynamic/', dynamic, name = ('dynamic')),
+	path('photo/', photo, name = ('photo')),
+	path('create_adding_photo/', create_adding_photo, name = ('create_adding_photo')),
+	path('<int:pk>/',PhotoDetailView.as_view(), name = 'photo_detail'),
+	path('<int:pk>/update/',PhotoUpdateView.as_view(), name = 'photo_change'),
+	path('<int:pk>/delete/',PhotoDeleteView.as_view(), name = 'photo_delete'),
 ]

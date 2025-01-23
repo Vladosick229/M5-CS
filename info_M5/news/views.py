@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from .models import Article
 from .forms import ArticleForm
 from django.views.generic import DetailView,UpdateView,DeleteView
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import ArticleSerializer
@@ -12,6 +12,7 @@ from .serializers import ArticleSerializer
 def news_home(request):
 	news = Article.objects.order_by('-date')
 	return render(request, 'news/news_home.html',{'title':'News about M5 CS','news': news})
+
 
 
 class NewsDetailView(DetailView):
@@ -28,23 +29,29 @@ class NewsDeleteView(DeleteView):
 	model= Article
 	success_url = '/news/'
 	template_name = 'news/news_delete.html'
+ 
+ 
+class NewsViewSet(viewsets.ModelViewSet):
+   queryset = Article.objects.all()
+   serializer_class = ArticleSerializer 
+   
+   
+# class NewsAPIList(generics.ListCreateAPIView):
+#     queryset = Article.objects.all()
+#     serializer_class = ArticleSerializer
 
-class NewsAPIList(generics.ListCreateAPIView):
-    queryset = Article.objects.all()
-    serializer_class = ArticleSerializer
 
-
-class NewsAPIUpdate(generics.UpdateAPIView):
-	queryset = Article.objects.all()
-	serializer_class = ArticleSerializer
+# class NewsAPIUpdate(generics.UpdateAPIView):
+# 	queryset = Article.objects.all()
+# 	serializer_class = ArticleSerializer
 	
 
-class NewsAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
-	queryset = Article.objects.all()
-	serializer_class = ArticleSerializer
+# class NewsAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
+# 	queryset = Article.objects.all()
+# 	serializer_class = ArticleSerializer
 
 	
-class NewsAPIView(APIView):
+# class NewsAPIView(APIView):
     
     # def put(self, request,*args,**kwargs):
     #     pk = kwargs.get('pk',None)
@@ -62,18 +69,20 @@ class NewsAPIView(APIView):
     #     return Response({'updated': serializer.data})
     
     
-    def delete(self, request,*args,**kwargs):
-        pk = kwargs.get('pk',None)
-        if not pk:
-            return Response({'error': 'Article not found'})
+    # def delete(self, request,*args,**kwargs):
+    #     pk = kwargs.get('pk',None)
+    #     if not pk:
+    #         return Response({'error': 'Article not found'})
         
-        try:
-            instance = Article.objects.get(pk=pk)
-        except:
-            return Response({'error': 'Article not found'})
+    #     try:
+    #         instance = Article.objects.get(pk=pk)
+    #     except:
+    #         return Response({'error': 'Article not found'})
         
-        instance.delete()
-        return Response({'message':'Deletion was successful'})
+    #     instance.delete()
+    #     return Response({'message':'Deletion was successful'})
+
+
 
 
 def create(request):
