@@ -1,10 +1,13 @@
 from django.shortcuts import render,redirect
 from .models import Article
 from .forms import ArticleForm
+from .permissions import *
 from django.views.generic import DetailView,UpdateView,DeleteView
 from rest_framework import generics, viewsets
+from rest_framework.permissions import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from .serializers import ArticleSerializer
 
 
@@ -31,24 +34,40 @@ class NewsDeleteView(DeleteView):
 	template_name = 'news/news_delete.html'
  
  
-class NewsViewSet(viewsets.ModelViewSet):
-   queryset = Article.objects.all()
-   serializer_class = ArticleSerializer 
+# class NewsViewSet(viewsets.ModelViewSet):
+# 	# queryset = Article.objects.all()
+# 	serializer_class = ArticleSerializer 
+
+# 	def get_queryset(self):
+# 		pk = self.kwargs.get('pk')
+
+# 		if not pk:
+# 			return Article.objects.all()
+# 		else:
+# 			return Article.objects.filter(pk=pk)
+
+# 	@action(methods=['get'],detail=False)
+# 	def get_anons(self, request):
+# 		anon = Article.objects.filter(anons='Anons')
+# 		return Response({'anon':[a.title for a in anon]})
    
-   
-# class NewsAPIList(generics.ListCreateAPIView):
-#     queryset = Article.objects.all()
-#     serializer_class = ArticleSerializer
+class NewsAPIList(generics.ListCreateAPIView):
+	queryset = Article.objects.all()
+	serializer_class = ArticleSerializer
+	permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
-# class NewsAPIUpdate(generics.UpdateAPIView):
-# 	queryset = Article.objects.all()
-# 	serializer_class = ArticleSerializer
+class NewsAPIUpdate(generics.UpdateAPIView):
+	queryset = Article.objects.all()
+	serializer_class = ArticleSerializer
+	permission_classes = (IsAuthenticated,)
+	
 	
 
-# class NewsAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
-# 	queryset = Article.objects.all()
-# 	serializer_class = ArticleSerializer
+class NewsAPIDestroy(generics.RetrieveDestroyAPIView):
+	queryset = Article.objects.all()
+	serializer_class = ArticleSerializer
+	permission_classes = (IsAdminOrReadOnly,)
 
 	
 # class NewsAPIView(APIView):
@@ -104,4 +123,5 @@ def create(request):
 	}
 
 	return render(request, 'news/create.html',data)
+
 
