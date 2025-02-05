@@ -52,15 +52,21 @@ class NewsDeleteView(DeleteView):
 # 		return Response({'anon':[a.title for a in anon]})
    
 class NewsAPIList(generics.ListCreateAPIView):
-	queryset = Article.objects.all()
+	def get_queryset(self):
+		pk = self.kwargs.get('pk')
+
+		if not pk:
+			return Article.objects.all()
+		else:
+			return Article.objects.filter(pk=pk)
 	serializer_class = ArticleSerializer
 	permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
-class NewsAPIUpdate(generics.UpdateAPIView):
+class NewsAPIUpdate(generics.RetrieveUpdateAPIView):
 	queryset = Article.objects.all()
 	serializer_class = ArticleSerializer
-	permission_classes = (IsAuthenticated,)
+	permission_classes = (IsOwnerOrReadOnly,)
 	
 	
 
@@ -123,5 +129,3 @@ def create(request):
 	}
 
 	return render(request, 'news/create.html',data)
-
-
